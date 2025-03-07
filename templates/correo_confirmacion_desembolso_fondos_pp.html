@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Desembolso de Fondos</title>
+</head>
+
+<body style="background-color: white; font-family: Arial, sans-serif; color: #374151; line-height: 1.6; margin: 0; padding: 0; font-size: 14px;">
+  <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+    <!-- Encabezado -->
+    <div style="border-top: 4px solid #f97316; padding-top: 10px;">
+      <p style="color: #1f2937;">Estimado/a <span>{{ nombreEmpresa }}</span>,</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div style="margin-top: 10px;">
+      <p>
+        Nos complace informarle que el desembolso de fondos correspondiente a su solicitud de pronto pago ha sido realizado exitosamente. A continuación, encontrará los detalles de la transacción:
+      </p>
+
+      <!-- Detalle de la Operación -->
+      <div style="margin-top: 10px;">
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold;">Detalle de la Operación:</h4>
+        <ul style="list-style-type: disc; list-style-position: outside; padding-left: 20px; margin: 0;">
+          <li><strong>Factura N.°:</strong> {{ noFactura }}</li>
+          <li><strong>Monto Original de la Factura:</strong> {{ montoFacturaOriginal }}</li>
+          <li><strong>Descuento Aplicado:</strong> {{ descuentoAplicado }}</li>
+          <li><strong>Monto Desembolsado:</strong> {{ montoDesembolsado }}</li>
+          <li><strong>Fecha del Desembolso:</strong> {{ fechaDesembolso }}</li>
+          <li><strong>Cuenta Destino:</strong> {{ cuentaDestino }}</li>
+        </ul>
+      </div>
+
+      <p>
+        Con este desembolso, queda completada su solicitud de pronto pago. El monto correspondiente ya ha sido transferido a su cuenta bancaria registrada y debería estar reflejado en su saldo en las próximas 24 a 48 horas, dependiendo de los tiempos de su institución financiera.
+      </p>
+
+      <p>
+        Si tiene alguna duda sobre esta transacción o requiere asistencia adicional, no dude en comunicarse con nosotros.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 14px;">
+      <p>Atentamente,</p>
+      <p style="font-weight: bold;">Synergy Financial Corp</p>
+      <p>Vanessa Chicas</p>
+      <p>Tel: 7830-2983</p>
+    </div>
+  </div>
+</body>
+
+</html>

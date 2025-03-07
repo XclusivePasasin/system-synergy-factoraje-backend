@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nueva Solicitud de Pronto Pago Pendiente de Revisión</title>
+</head>
+
+<body style="background-color: white; font-family: Arial, sans-serif; color: #374151; line-height: 1.6; margin: 0; padding: 0; font-size: 14px;">
+  <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+    <!-- Encabezado -->
+    <div style="border-top: 4px solid #f97316; padding-top: 10px;">
+      <p style="color: #1f2937;">Estimado/a <span>{{ nombreContador }}</span>,</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div style="margin-top: 10px;">
+      <p>
+        Le informamos que se ha recibido una nueva solicitud de pronto pago que requiere su revisión y gestión a la brevedad posible.
+      </p>
+
+      <!-- Detalle de la Solicitud -->
+      <div style="margin-top: 10px;">
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold;">Detalle de la Solicitud:</h4>
+        <ul style="list-style-type: disc; list-style-position: outside; padding-left: 20px; margin: 0;">
+          <li><strong>Proveedor:</strong> {{ proveedor }}</li>
+          <li><strong>Factura N.°:</strong> {{ noFactura }}</li>
+          <li><strong>Monto de la Factura:</strong> {{ montoFactura }}</li>
+          <li><strong>Fecha de Solicitud:</strong> {{ fechaSolicitud }}</li>
+          <li><strong>Días de Crédito Restantes:</strong> {{ diasCredito }}</li>
+        </ul>
+      </div>
+
+      <p>
+        Le recordamos que puede aprobar o denegar esta solicitud ingresando al sistema de factoraje en la sección correspondiente de gestión de solicitudes pendientes.
+      </p>
+      <p>
+        Por favor, atienda esta solicitud en el menor tiempo posible para garantizar una experiencia eficiente para el proveedor.
+      </p>
+
+      <p>
+        Cualquier consulta o inconveniente, no dude en comunicarse con el equipo de soporte.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 14px;">
+      <p>Atentamente,</p>
+      <p style="font-weight: bold;">Equipo de Automatización de Factoraje</p>
+      <p>{{nombreEmpresa}}</p>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restablecimiento de Contraseña</title>
+</head>
+
+<body style="background-color: white; font-family: Arial, sans-serif; color: #374151; line-height: 1.6; margin: 0; padding: 0; font-size: 14px;">
+  <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+    <!-- Encabezado -->
+    <div style="border-top: 4px solid #f97316; padding-top: 10px;">
+      <p style="color: #1f2937;">Estimado/a <span>{{ nombreUsuario }}</span>,</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div style="margin-top: 10px;">
+      <p>
+        Hemos restablecido tu contraseña de acceso al sistema de pronto pago de Synergy. A continuación, encontrarás tus nuevas credenciales temporales:
+      </p>
+
+      <!-- Detalle de las credenciales -->
+      <div style="margin-top: 10px;">
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold;">Detalles de tu acceso:</h4>
+        <ul style="list-style-type: disc; list-style-position: outside; padding-left: 20px; margin: 0;">
+          <li><strong>Correo electrónico:</strong> {{ correoElectronico }}</li>
+          <li><strong>Contraseña Temporal:</strong> {{ contrasenaTemporal }}</li>
+        </ul>
+      </div>
+
+      <p class="margin: 0;">
+        Por favor, sigue estos pasos al acceder al sistema por primera vez con tu nueva contraseña:
+      </p>
+      <ol style="padding-left: 20px; margin: 0;">
+        <li>Inicia sesión utilizando el correo electrónico y la contraseña temporal proporcionados.</li>
+        <li>Se te solicitará cambiar esta contraseña temporal por una nueva contraseña segura de tu elección.</li>
+      </ol>
+
+      <p>
+        <strong>Nota:</strong> La contraseña temporal tiene una vigencia limitada. Cambia tu contraseña lo antes posible para garantizar el acceso continuo al sistema.
+      </p>
+
+      <p>
+        Si tienes alguna pregunta o necesitas ayuda adicional, no dudes en contactar a nuestro equipo de soporte.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 14px;">
+      <p>Atentamente,</p>
+      <p style="font-weight: bold;">Equipo de Automatización de Factoraje</p>
+      <p>{{ nombreEmpresa }}</p>
+    </div>
+  </div>
+</body>
+
+</html>

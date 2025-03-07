@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Solicitud de Pronto Pago</title>
+</head>
+<body style="background-color: white; font-family: Arial, sans-serif; color: #374151; line-height: 1.6; margin: 0; padding: 0; font-size: 14px;">
+  <!--Encabezado-->
+  <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+    <div style="border-top: 4px solid #f97316; padding-top: 10px;">
+      <p style="color: #1f2937;">Estimado/a <span>{{ nombreSolicitante }}</span>,</p>
+    </div>
+    <!-- Contenido principal -->
+    <div style="margin-top: 10px;">
+      <p>
+        Nos complace informarle que su solicitud de pronto pago ha sido enviada con éxito a través de nuestro sistema automatizado de factoraje.
+      </p>
+
+      <div>
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold; margin: 0; padding: 0; ">¿Qué sigue?</h4>
+        <p style="margin: 0; padding: 0;">
+          Estamos revisando su solicitud y pronto recibirá un correo adicional confirmando si ha sido aprobada o denegada.
+        </p>
+      </div>
+
+      <div >
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold;">Detalle de la Solicitud:</h4>
+        <p style="margin: 0; padding: 0;"><strong>Factura N.°:</strong> {{ noFactura }}</p>
+        <p style="margin: 0; padding: 0;"><strong>Monto de la Factura:</strong> {{ monto }}</p>
+        <p style="margin: 0; padding: 0;"><strong>Fecha de Solicitud:</strong> {{ fechaSolicitud }}</p>
+      </div>
+
+      <p>
+        Le agradecemos por utilizar nuestro sistema de factoraje automatizado y quedamos a su disposición para cualquier consulta adicional.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 14px;">
+      <p>Atentamente,</p>
+      <p style="font-weight: bold;">{{nombreEmpresa}}</p>
+      <p>{{nombreEncargadoEmpresa}}</p>
+      <p>Tel: {{telefonoEmpresa}}</p>
+    </div>
+  </div>
+</body>
+
+</html>

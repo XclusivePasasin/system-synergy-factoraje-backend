@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Pronto Pago Aprobado</title>
+</head>
+
+<body style="background-color: white; font-family: Arial, sans-serif; color: #374151; line-height: 1.6; margin: 0; padding: 0; font-size: 14px;">
+  <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+    <!-- Encabezado -->
+    <div style="border-top: 4px solid #f97316; padding-top: 10px;">
+      <p style="color: #1f2937;">Estimado/a <span>{{ nombreSolicitante }}</span>,</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div style="margin-top: 10px;">
+      <p>
+        Nos complace informarle que su solicitud de pronto pago ha sido <span style="font-weight: bold;">aprobada con éxito</span>. Ahora podrá recibir el pago anticipado de su factura, según las condiciones de nuestro sistema de factoraje.
+      </p>
+
+      <!-- ¿Cómo funciona? -->
+      <div>
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold; margin: 0; padding: 0;">¿Cómo funciona?</h4>
+        <p style="margin: 0; padding: 0;">
+          Al optar por el pronto pago, recibirá el pago de su factura de manera anticipada, a cambio de un descuento. Esta opción le permitirá acceder a su pago antes del vencimiento, según las condiciones de factoraje disponibles.
+        </p>
+      </div>
+
+      <!-- Detalle de la Operación -->
+      <div style="margin-top: 10px;">
+        <h4 style="color: #1f2937; font-size: 14px; font-weight: bold;">Detalle de la Operación:</h4>
+        <ul style="list-style-type: disc; list-style-position: outside; padding-left: 20px; margin: 0;">
+          <li><strong>Factura N.°:</strong> {{ noFactura }}</li>
+          <li><strong>Monto de la Factura:</strong> {{ montoFactura }}</li>
+          <li><strong>Descuento por Pronto Pago:</strong> {{ descuento }}</li>
+          <li><strong>IVA:</strong> {{ iva }}</li>
+          <li><strong>Subtotal del Descuento:</strong> {{ subtotal }}</li>
+          <li><strong>Fecha de Solicitud:</strong> {{ fechaSolicitud }}</li>
+          <li><strong>Fecha de Vencimiento:</strong> {{ fechaVencimiento }}</li>
+          <li><strong>Días de Crédito Restantes:</strong> {{ diasCredito }}</li>
+        </ul>
+      </div>
+
+      <p>
+        El monto aprobado será depositado en la cuenta bancaria registrada en nuestro sistema en un plazo de 24 horas. Agradecemos su confianza en Synergy Financial Corp.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 10px; font-size: 14px;">
+      <p>Atentamente,</p>
+      <p style="font-weight: bold;">{{nombreEmpresa}}</p>
+      <p>{{nombreEncargadoEmpresa}}</p>
+      <p>Tel: {{telefonoEmpresa}}</p>
+    </div>
+  </div>
+</body>
+
+</html>
