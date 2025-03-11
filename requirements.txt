@@ -12,4 +12,5 @@ requests
 Jinja2
 pandas
 openpyxl  
-
+weasyprint
+pdfkit
