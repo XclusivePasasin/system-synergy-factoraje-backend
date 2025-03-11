@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles de Solicitud</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        .content {
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            max-width: 700px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .fecha {
+            text-align: right;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .footer {
+            width: 100%;
+            max-width: 700px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Detalles de la Solicitud</h2>
+        </div>
+        
+        <div class="content">
+            <div class="fecha">
+                Fecha de Generación: {{ fecha_generacion }}
+            </div>
+            <div class="cliente">
+                Cliente: {{ solicitud.nombre_cliente }}
+            </div>
+
+            <table>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                </tr>
+                <tr>
+                    <td>Factura N°</td>
+                    <td>{{ solicitud.numero_factura }}</td>
+                </tr>
+                <tr>
+                    <td>Fecha de Otorgamiento</td>
+                    <td>{{ solicitud.fecha_otorgamiento }}</td>
+                </tr>
+                <tr>
+                    <td>Fecha de Vencimiento</td>
+                    <td>{{ solicitud.fecha_vencimiento }}</td>
+                </tr>
+                <tr>
+                    <td>Monto de la Factura</td>
+                    <td>${{ "{:,.2f}".format(solicitud.monto_factura) }}</td>
+                </tr>
+                <tr>
+                    <td>Descuento por Pronto Pago</td>
+                    <td>${{ "{:,.2f}".format(solicitud.descuento) }}</td>
+                </tr>
+                <tr>
+                    <td>IVA</td>
+                    <td>${{ "{:,.2f}".format(solicitud.iva) }}</td>
+                </tr>
+                <tr>
+                    <td>Subtotal de Descuento</td>
+                    <td>${{ "{:,.2f}".format(solicitud.subtotal_descuento) }}</td>
+                </tr>
+                <tr class="total">
+                    <td>Total a Recibir</td>
+                    <td>${{ "{:,.2f}".format(solicitud.total_recibir) }}</td>
+                </tr>
+            </table>
+
+            <div class="footer">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
