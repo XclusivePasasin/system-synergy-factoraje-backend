@@ -10,6 +10,9 @@ import shutil
 from datetime import datetime
 from openpyxl import load_workbook
 import os
+from jinja2 import Environment, FileSystemLoader
+import pdfkit
+from io import BytesIO
 
 def actualizar_solicitudes(lista_ids):
     """
@@ -68,8 +71,8 @@ def exportar_solicitudes(lista_ids, formato="excel", ruta_archivo_base="utils/pl
     # Extraer año, mes y día
     fecha_actual = datetime.now()
     año = fecha_actual.year
-    mes = fecha_actual.month
-    dia = fecha_actual.day
+    mes = str(fecha_actual.month).zfill(2)
+    dia = str(fecha_actual.day).zfill(2)
     descripcion = "Desembolso factoraje"
 
     # Definir el mapeo de columnas
@@ -95,7 +98,7 @@ def exportar_solicitudes(lista_ids, formato="excel", ruta_archivo_base="utils/pl
             año,  # Año actual
             mes,  # Mes actual
             dia,  # Día actual
-            r.total, # Total de la solicitud
+            int(str(r.total).replace('.', '')), # Total de la solicitud sin punto decimal
             empresa,  # Nombre de la empresa encargada del factoraje
             r.nombre_proveedor,  # Nombre del proveedor
             r.codigo_banco,  # Código del banco
@@ -106,11 +109,21 @@ def exportar_solicitudes(lista_ids, formato="excel", ruta_archivo_base="utils/pl
     ]
 
     # Generar nombre del archivo basado en la fecha actual
-    fecha_actual = datetime.now().strftime("%d/%m/%Y")
-    nombre_archivo = f"Desembolsos_{fecha_actual}.xlsx"
-
-    # Copiar el archivo base antes de modificarlo
-    shutil.copy(ruta_archivo_base_absoluta, nombre_archivo)
+    fecha_actual = datetime.now().strftime("%d-%m-%Y")
+    nombre_base = f"Desembolsos_{fecha_actual}"
+    
+    # Intentar diferentes nombres de archivo si el original está en uso
+    contador = 0
+    while True:
+        nombre_archivo = f"{nombre_base}.xlsx" if contador == 0 else f"{nombre_base}_{contador}.xlsx"
+        try:
+            # Copiar el archivo base antes de modificarlo
+            shutil.copy2(ruta_archivo_base_absoluta, nombre_archivo)
+            break
+        except PermissionError:
+            contador += 1
+            if contador > 100:  # Límite de intentos
+                raise Exception("No se pudo crear el archivo. Demasiados archivos en uso.")
 
     # Cargar la copia del archivo base y obtener la hoja activa
     libro = load_workbook(nombre_archivo)
@@ -122,11 +135,84 @@ def exportar_solicitudes(lista_ids, formato="excel", ruta_archivo_base="utils/pl
             columna = mapeo_columnas[clave]  # Obtener número de columna según el mapeo
             hoja.cell(row=i, column=columna, value=valor)
 
-    # Guardar el archivo modificado
+    # Guardar el archivo modificado y cerrar el libro
     libro.save(nombre_archivo)
+    libro.close()
 
     # 📌 Intentar enviar el archivo y eliminarlo después
     try:
         return send_file(nombre_archivo, as_attachment=True, download_name=nombre_archivo)
     finally:
-        os.remove(nombre_archivo)  # Eliminar el archivo después de enviarlo
+        # Asegurarse de que el archivo esté cerrado antes de eliminarlo
+        if 'libro' in locals():
+            try:
+                libro.close()
+            except:
+                pass
+        try:
+            os.remove(nombre_archivo)  # Eliminar el archivo después de enviarlo
+        except:
+            pass  # Ignorar errores al eliminar el archivo
+
+
+def generar_pdf_solicitud(solicitud):
+    """
+    Genera un PDF con los detalles de la solicitud usando una plantilla HTML.
+    
+    Args:
+        solicitud: Objeto de solicitud con los datos necesarios
+        
+    Returns:
+        BytesIO: Buffer con el contenido del PDF generado
+    """
+    try:
+        # Configurar el entorno de Jinja2
+        template_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates')
+        env = Environment(loader=FileSystemLoader(template_dir))
+        template = env.get_template('solicitud_pdf.html')
+
+        # Preparar los datos para la plantilla
+        datos_solicitud = {
+            'numero_factura': solicitud.factura.no_factura,
+            'fecha_otorgamiento': solicitud.factura.fecha_otorga.strftime('%d/%m/%Y'),
+            'fecha_vencimiento': solicitud.factura.fecha_vence.strftime('%d/%m/%Y'),
+            'monto_factura': float(solicitud.factura.monto),
+            'descuento': float(solicitud.descuento_app or 0),
+            'iva': float(solicitud.iva or 0),
+            'subtotal_descuento': float(solicitud.subtotal or 0),
+            'total_recibir': float(solicitud.total or 0),
+            'nombre_proveedor': solicitud.factura.nombre_proveedor,
+            'nit_proveedor': solicitud.factura.nit,
+            'nombre_cliente': solicitud.factura.proveedor.razon_social if solicitud.factura and solicitud.factura.proveedor else 'No especificado'
+        }
+
+        # Renderizar la plantilla
+        html_content = template.render(
+            solicitud=datos_solicitud,
+            fecha_generacion=datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        )
+
+        # Configuración de wkhtmltopdf
+        config = pdfkit.configuration(wkhtmltopdf='C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+        
+        # Opciones para el PDF
+        options = {
+            'page-size': 'Letter',
+            'margin-top': '1.85in',
+            'margin-right': '0.75in',
+            'margin-bottom': '0.75in',
+            'margin-left': '0.75in',
+            'encoding': "UTF-8",
+            'no-outline': None
+        }
+
+        # Generar PDF
+        pdf = pdfkit.from_string(html_content, False, options=options, configuration=config)
+        
+        # Crear buffer de memoria con el PDF
+        pdf_buffer = BytesIO(pdf)
+        pdf_buffer.seek(0)
+        
+        return pdf_buffer
+    except Exception as e:
+        raise Exception(f"Error al generar el PDF: {str(e)}")

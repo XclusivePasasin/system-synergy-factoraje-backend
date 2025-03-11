@@ -8,11 +8,11 @@ from models.comentarios import Comentario
 from models.proveedores_calificados import ProveedorCalificado
 from sqlalchemy import and_, or_
 from utils.response import response_success, response_error
-from services.solicitudes_services import actualizar_solicitudes, exportar_solicitudes
+from services.solicitudes_services import actualizar_solicitudes, exportar_solicitudes, generar_pdf_solicitud
 from utils.interceptor import token_required
 from services.email_service import *
 from utils.bitacora import bitacora
-
+from sqlalchemy.orm import joinedload
 
 solicitud_bp = Blueprint('solicitud', __name__)
 
@@ -435,3 +435,42 @@ def procesar_solicitudes_route():
 
     except Exception as e:
         return response_error(f"Error en la ruta: {str(e)}", http_status=500)
+
+
+@solicitud_bp.route('/generar-pdf', methods=['GET'])
+@token_required
+def generar_pdf_route():
+    """
+    Genera un PDF con los detalles de una solicitud específica.
+    El ID de la solicitud se recibe como query parameter: ?id_solicitud=1
+    """
+    try:
+        # Obtener el id_solicitud del query parameter
+        id_solicitud = request.args.get('id_solicitud', type=int)
+        if id_solicitud is None:
+            return response_error("El parámetro id_solicitud es requerido", http_status=400)
+
+        # Obtener la solicitud de la base de datos con sus relaciones
+        solicitud = Solicitud.query.options(
+            joinedload(Solicitud.factura).joinedload(Factura.proveedor)
+        ).get(id_solicitud)
+        
+        if not solicitud:
+            return response_error("Solicitud no encontrada", http_status=404)
+
+        # Generar el PDF usando el servicio
+        pdf_buffer = generar_pdf_solicitud(solicitud)
+        
+        # Generar nombre del archivo
+        nombre_archivo = f"Solicitud_{solicitud.factura.no_factura}_{datetime.now().strftime('%d-%m-%Y')}.pdf"
+        
+        # Enviar el archivo PDF como respuesta
+        return send_file(
+            pdf_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=nombre_archivo
+        )
+
+    except Exception as e:
+        return response_error(f"Error al generar el PDF: {str(e)}", http_status=500)
