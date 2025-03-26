@@ -408,30 +408,29 @@ def panel_solicitudes():
         return response_error(f"Error al procesar la solicitud: {str(e)}", http_status=500)
 
 
+   
 @solicitud_bp.route('/procesar-solicitudes', methods=['POST'])
 @token_required
 def procesar_solicitudes_route():
-    """
-    Recibe una lista de valores unicos y llama al servicio para procesar las solicitudes y exportar la información en un archivo de Excel.
-    """
     try:
         data = request.get_json()
         lista_ids = data.get("ids", [])
+        numero_inicial = data.get("numero_inicial", 1)  # Número inicial incremental
 
-        # Actualizar las solicitudes estado a 'Procesada'
         cantidad_actualizadas, error = actualizar_solicitudes(lista_ids)
         if error:
             return response_error(error, http_status=400)
 
-        # Exportar las solicitudes en un formato Excel
-        archivo = exportar_solicitudes(lista_ids)
-        
-        # Si exportar_solicitudes devuelve un error, manejarlo
-        if isinstance(archivo, tuple) and archivo[1] == 400:  # Si es un error
-            return archivo  # Devuelve el error directamente
-        
-        # Devolver el archivo generado
+        archivo = exportar_solicitudes(lista_ids, numero_inicial=numero_inicial)
+
+        if isinstance(archivo, tuple) and archivo[1] == 400:
+            return archivo
+
         return archivo
+
+    except Exception as e:
+        return response_error(f"Error en la ruta: {str(e)}", http_status=500)
+
 
     except Exception as e:
         return response_error(f"Error en la ruta: {str(e)}", http_status=500)
