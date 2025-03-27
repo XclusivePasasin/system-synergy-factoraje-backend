@@ -39,7 +39,7 @@ def actualizar_solicitudes(lista_ids):
             cuenta_bancaria = solicitud.factura.proveedor.cuenta_bancaria
 
         nuevo_desembolso = Desembolso(
-            fecha_desembolso=datetime.now().strftime('%Y/%m/%d'),
+            # fecha_desembolso=datetime.now().strftime('%Y/%m/%d'),
             monto_final=solicitud.total,
             metodo_pago='Transferencia bancaria',
             cuenta_bancaria=cuenta_bancaria,
@@ -158,7 +158,10 @@ def exportar_solicitudes(lista_ids, formato="excel", ruta_archivo_base="utils/pl
         for clave, valor in zip(mapeo_columnas.keys(), fila):
             columna = mapeo_columnas[clave]
             if clave == "suma_registros":
-                hoja.cell(row=i, column=columna, value=i-1)  # Valor incremental a partir de 1
+                if i == 1:  # Solo en la primera fila de datos (segunda fila del archivo Excel)
+                    hoja.cell(row=i, column=columna, value=cantidad_registros)
+                else:
+                    hoja.cell(row=i, column=columna, value=None)  # Dejar vacío en las filas siguientes
             else:
                 hoja.cell(row=i, column=columna, value=valor)
 
