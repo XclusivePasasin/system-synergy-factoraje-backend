@@ -8,6 +8,7 @@ from models.facturas import Factura
 from models.proveedores_calificados import ProveedorCalificado
 from models.estados import Estado
 from utils.interceptor import token_required
+from services.desembolsos_service import *
 
 desembolsos_bp = Blueprint('desembolso', __name__)
 
@@ -148,4 +149,45 @@ def obtener_detalle_desembolso():
     except Exception as e:
         return response_error(f"Error al obtener el detalle del desembolso: {str(e)}", http_status=500)
 
+
+@desembolsos_bp.route('/procesar-archivo-desembolsos', methods=['POST'])
+@token_required
+def procesar_archivo_desembolsos():
+    try:
+        if 'file' not in request.files:
+            return response_error("No se encontró el archivo en la solicitud", http_status=400)
+        
+        file = request.files['file']
+        
+        if not file.filename.lower().endswith('.txt'):
+            return response_error("El archivo debe ser de tipo .txt", http_status=400)
+        
+        # Leer el contenido del archivo con manejo de codificación
+        file_content = file.read()
+        
+        # Intentar con diferentes codificaciones
+        encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252']
+        content = None
+        
+        for encoding in encodings:
+            try:
+                content = file_content.decode(encoding)
+                break
+            except UnicodeDecodeError:
+                continue
+                
+        if content is None:
+            return response_error("No se pudo decodificar el archivo", http_status=400)
+        
+        # Procesar el archivo
+        resultado = procesar_txt_desembolsos(content)
+        
+        return response_success({
+            "encabezado": resultado["encabezado"],
+            "transacciones_procesadas": len(resultado["transacciones"]),
+            "desembolsos_actualizados": resultado["actualizados"]
+        }, "Archivo procesado exitosamente")
     
+    except Exception as e:
+        db.session.rollback()
+        return response_error(f"Error al procesar el archivo: {str(e)}", http_status=500)
